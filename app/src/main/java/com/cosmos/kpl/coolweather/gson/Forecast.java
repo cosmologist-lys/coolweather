@@ -3,6 +3,9 @@ package com.cosmos.kpl.coolweather.gson;
 import com.google.gson.annotations.SerializedName;
 
 public class Forecast {
+
+    //farseer daysaway info
+
     public String date;
 
     @SerializedName("tmp")

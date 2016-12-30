@@ -9,7 +9,7 @@ public class Weather {
 
     public String status;
 
-    public GsonBasic basic;
+    public Basic basic;
 
     public AQI aqi;
 

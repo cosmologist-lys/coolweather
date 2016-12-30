@@ -3,7 +3,10 @@ package com.cosmos.kpl.coolweather.gson;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GsonBasic {
+public class Basic {
+
+    //basic info
+
     @SerializedName("city")
     public String cityName;
 

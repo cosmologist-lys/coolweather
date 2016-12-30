@@ -4,6 +4,9 @@ package com.cosmos.kpl.coolweather.gson;
 import com.google.gson.annotations.SerializedName;
 
 public class Suggestion {
+
+    //weather suggestions
+
     @SerializedName("comf")
     public Comfort comfort;
 
