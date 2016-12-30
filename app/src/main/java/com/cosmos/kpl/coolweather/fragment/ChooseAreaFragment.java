@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cosmos.kpl.coolweather.R;
+import com.cosmos.kpl.coolweather.activity.MainActivity;
 import com.cosmos.kpl.coolweather.db.City;
 import com.cosmos.kpl.coolweather.db.County;
 import com.cosmos.kpl.coolweather.db.Province;
@@ -84,9 +86,15 @@ public class ChooseAreaFragment extends Fragment {
                     selectedProvince = provinceList.get(i);
                     queryCities();
                 }
-                if (currentLevel == LEVEL_CITY){
+                else if (currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(i);
                     queryCounties();
+                }
+                else if (currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(i).getWeatherId();
+                    if (getActivity() instanceof MainActivity){
+
+                    }
                 }
             }
         });
@@ -136,6 +144,7 @@ public class ChooseAreaFragment extends Fragment {
             dataList.clear();
             for (City c : cityList){
                 dataList.add(c.getCityName());
+                Log.i("query cities : ", c.getCityName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -151,10 +160,11 @@ public class ChooseAreaFragment extends Fragment {
         titleText.setText(selectedCity.getCityName());
         backBTN.setVisibility(View.VISIBLE);
         countyList = DataSupport.where("cityid = ?",String.valueOf(selectedCity.getId())).find(County.class);
-        if (null != cityList && cityList.size()>0){
+        if (null != countyList && countyList.size()>0){
             dataList.clear();
             for (County c : countyList){
                 dataList.add(c.getCountyName());
+                Log.i("query counties : ", c.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -163,6 +173,7 @@ public class ChooseAreaFragment extends Fragment {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
             String address = "http://guolin.tech/api/china/" + provinceCode +"/" + cityCode;
+            Log.i("query counties : ", address);
             queryFromServer(address,"county");
         }
 
@@ -226,9 +237,12 @@ public class ChooseAreaFragment extends Fragment {
         会获得超长的生命周期，当它显示后的页面（也就是activity）finish掉，它扔存在且别的页面无法杀死它，这样就造成程序的内存泄漏。
         所以应该绑定在显示的activity上。
          */
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("正在加载");
-        progressDialog.setCanceledOnTouchOutside(false);
+        if (progressDialog == null){
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("正在加载");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
     }
 
     private void closeProgressDialog(){
